@@ -45,6 +45,35 @@ function onLoaded() {
 	csInterface.evalScript('$._PPP_.confirmPProHostVersion()');
 }
 
+var globalTimer = null;
+var globalCountClicks = 0;
+
+var createContinousClicks = function() {
+	if (globalTimer == null) {
+		globalCountClicks = 0;
+		globalTimer = setInterval(function(){ 
+			console.log("Generating a new click");
+			document.getElementById("btn_PPRO16").click();
+			globalCountClicks++;
+			document.getElementById("count-num-clicks").innerHTML = globalCountClicks;
+		}, 100);
+	}
+}
+
+function markersResetAndGenerate() {
+	console.log("markersResetAndGenerate++");
+	createContinousClicks();
+}
+
+function markersStopGeneration() {
+	console.log("markersStopGeneration++");
+	if (globalTimer != null) {
+		clearInterval(globalTimer);
+		globalTimer = null;
+	}
+}
+
+
 function dragHandler(event){
 	var csInterface = new CSInterface();
 	var extPath 	= csInterface.getSystemPath(SystemPath.EXTENSION);
@@ -59,6 +88,12 @@ function dragHandler(event){
 		event.dataTransfer.setData("com.adobe.cep.dnd.file.0", extPath);
 	//	event.dataTransfer.setData("com.adobe.cep.dnd.file.N", path);  N = (items to import - 1)
 	}
+}
+
+function markersClearAll() {
+	var csInterface = new CSInterface();
+	console.log("markersStopGeneration++");
+	csInterface.evalScript('$._PPP_.markersClearAll()');
 }
 
 function myCallBackFunction (data) {

@@ -133,6 +133,36 @@ $._PPP_={
 		var success = app.bind("onSourceClipSelectedInProjectPanel", $._PPP_.projectPanelSelectionChanged);
 	},
 
+	openPathInSource : function(path) {
+        if (path) {
+            app.sourceMonitor.openFilePath(path);
+            app.sourceMonitor.play(0.0); // playback speed as float, 1.0 = normal speed forward
+        } else {
+            $._PPP_.updateEventPanel("No file chosen.");        
+        }
+    },
+
+	selectFirstItem: function() {
+		var projectItem = app.project.rootItem.children[0]; // assumes first item is footage.
+		projectItem.select();
+	},
+
+	markersClearAll: function() {
+		var projectItem = app.project.rootItem.children[0]; // assumes first item is footage.
+		var markers = projectItem.getMarkers();
+
+		if (markers) {
+            var num_markers     = markers.numMarkers;
+
+            if (num_markers > 0){
+                for(var current_marker = markers.getFirstMarker(); current_marker !== undefined; ){
+                    var next_marker = markers.getNextMarker(current_marker);
+                    markers.deleteMarker(current_marker);
+                    current_marker = next_marker;
+                }
+            }
+        }
+	},
 
 	getProjectPanelMeta : function() {
 		$._PPP_.updateEventPanel(app.project.getProjectPanelMetadata());
